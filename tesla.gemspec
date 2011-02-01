@@ -5,12 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = %q{tesla}
-  s.version = ""
+  s.version = "0.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jesse Cooke"]
   s.date = %q{2011-01-31}
-  s.description = %q{TODO: longer description of your gem}
+  s.description = %q{Some nice things to have when developing using MagLev}
   s.email = %q{jesse@jc00ke.com}
   s.extra_rdoc_files = [
     "LICENSE.txt",
@@ -32,7 +32,7 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.4.2}
-  s.summary = %q{TODO: one-line summary of your gem}
+  s.summary = %q{Nice things when using MagLev}
   s.test_files = [
     "test/helper.rb",
     "test/test_tesla.rb"
