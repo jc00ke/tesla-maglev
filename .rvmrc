@@ -1,1 +1,4 @@
-rvm use --create maglev-25127@tesla
+rvm --use --create maglev-25153@tesla
+sleep 2
+maglev start
+ruby script/update.rb
