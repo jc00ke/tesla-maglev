@@ -3,6 +3,7 @@ require 'forwardable'
 require 'active_support/concern'
 
 require 'tesla/model'
+require 'tesla/model/devise_adapter'
 
 module Tesla
   # Flag the module as being persistable
