@@ -82,4 +82,85 @@ describe Tesla::Model do
     end
     
   end
+
+  describe "ActiveModel" do
+
+  end
+end
+
+describe "ActiveModel" do
+
+  include ActiveModel::Lint::Tests
+
+  class ::Railsy
+    include Tesla::Model
+    attr_accessor :name, :value
+    def to_param
+      name if persisted?
+    end
+  end
+
+  before do
+    @foo = Railsy.new :name => 'foo', :value => 13
+    @bar = Railsy.new :name => 'bar', :value => 42
+    # For the ActiveModel tests
+    @model = @foo
+  end
+
+  after do
+    Railsy.delete_all
+  end
+
+  it "should toggle #new_record?" do
+    assert @foo.new_record?
+    @foo.save
+    refute @foo.new_record?
+  end
+
+  describe "#new" do
+    class SomeClass
+      include Tesla::Model
+      attr_accessor :name
+      def the_name=(da_name)
+        @name = "#{da_name}!!!"
+      end
+    end
+    it "should set attrs from a hash" do
+      SomeClass.new(:the_name => 'Bob').name.must_equal("Bob!!!")
+    end
+  end
+
+  describe "#create" do
+    it "should set attrs, save & be found" do
+      blah = Railsy.create :name => 'blah'
+      refute blah.new_record?
+      Railsy.find("blah").must_equal blah
+    end
+  end
+
+  describe "#find" do
+    before do
+      @foo.save
+      @bar.save
+    end
+    it "should get a persisted model" do
+      Railsy.find("foo").must_equal @foo
+      Railsy.find("bar").must_equal @bar
+    end
+    it "should find_by_something" do
+      Railsy.find_by_name("foo").must_equal @foo
+      Railsy.find_by_value(42).must_equal @bar
+    end
+  end
+
+  describe "#destroy" do
+    it "should remove from the store" do
+      @foo.save
+      foo = Railsy.find_by_name("foo")
+      foo.must_equal @foo
+      foo.destroy
+      Railsy.find_by_name("foo").must_equal nil
+    end
+  end
+
 end

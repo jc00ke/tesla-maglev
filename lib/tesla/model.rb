@@ -1,11 +1,15 @@
+require 'active_model'
 
 module Tesla
   module Model
+
     extend ActiveSupport::Concern
 
     # Flag any classes that include Model to also be persistable
     included do
       class_eval{ maglev_persistable }
+      extend ActiveModel::Naming
+      include ActiveModel::Validations
     end
 
     # methods that will be available to the included class, eg: User.foo
@@ -39,16 +43,37 @@ module Tesla
         arg.is_a?(Module) ? !!included_modules.detect{ |m| m === arg } : store.include?(arg)
       end
 
-      # Change this after Peter adds IdentitySet#clear
+      # Change this to alias clear after Peter adds IdentitySet#clear
       # https://gist.github.com/806923
       def delete_all
         all.each{ |o| delete(o) }
       end
-      
+
+      def new(options={})
+        super(options).tap { |o| options.each { |k,v| o.send("#{k}=", v) if o.respond_to?("#{k}=") } }
+      end 
+
+      def create(options={})
+        new(options).tap { |o| o.save }
+      end
+
+      def find(param)
+        detect{ |o| o.to_param == param }
+      end
+
+      def method_missing(name, *args, &block)
+        return detect { |e| e.send($1) == args.first } if name.to_s =~ /^find_by_(.+)$/
+        super
+      end
     end
 
     # methods that will be available to instances of a class, eg: User.new.bar
     module InstanceMethods
+
+      def tap
+        yield(self)
+        self
+      end
       
       # Store the instance in the store
       def persist
@@ -68,6 +93,29 @@ module Tesla
       # Yet to be persisted?
       def transient?
         !persistent?
+      end
+
+      def destroy
+        @destroyed = true
+        desist
+      end
+
+      # ActiveModel compliance
+
+      alias persisted? persistent?
+      alias new_record? transient?
+      alias save persist
+
+      def to_model
+        self
+      end
+
+      def to_key
+        persistent? ? [object_id] : nil
+      end
+
+      def to_param
+        raise NotImplementedError, "Please implement in included class"
       end
 
     end
