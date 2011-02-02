@@ -1,8 +1,8 @@
-require File.join(File.dirname(__FILE__), '..', 'model.rb')
+require File.join(File.dirname(__FILE__), '..', 'model')
 
-module Tesla
-  module Model
-    module DeviseAdapter
+module Devise
+  module Orm
+    module Tesla
       module Hook
         def devise_modules_hook!
           extend Schema
@@ -15,11 +15,8 @@ module Tesla
         include Devise::Schema
 
         def apply_devise_schema(name, type, options={})
-          begin
-            attr_accessor name
-          rescue Exception => e
-            puts "Hmm: #{e.message}"
-          end
+          raise "#{name} is here"
+          attr_accessor name
         end
       end
     end
@@ -28,5 +25,5 @@ end
 
 Tesla::Model::ClassMethods.class_eval do
   include Devise::Models
-  include Tesla::Model::DeviseAdapter::Hook
+  include Devise::Orm::Tesla::Hook
 end
