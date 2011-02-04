@@ -20,7 +20,7 @@ if (latest > installed)
   cmds << "bundle"
   run = cmds.join(" && ")
   if ['', 'Y'].include?(upgrade)
-    system run
+    `#{run}`
   else
     puts "You can manually run this later:"
     puts run
