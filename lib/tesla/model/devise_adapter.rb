@@ -15,7 +15,6 @@ module Devise
         include Devise::Schema
 
         def apply_devise_schema(name, type, options={})
-          raise "#{name} is here"
           attr_accessor name
         end
       end
@@ -24,6 +23,6 @@ module Devise
 end
 
 Tesla::Model::ClassMethods.class_eval do
-  include Devise::Models
-  include Devise::Orm::Tesla::Hook
+ include Devise::Models
+ include Devise::Orm::Tesla::Hook
 end
