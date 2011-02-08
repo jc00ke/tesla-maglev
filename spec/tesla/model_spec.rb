@@ -5,12 +5,6 @@ class ::Bacon < Struct.new(:type); include Tesla::Model end
 
 describe Tesla::Model do
 
-  describe "persistably included" do
-    it "should pass along persistability" do
-      assert ::Egg.maglev_persistable?
-    end
-  end
-
   describe "instances" do
     before do
       @soggy    = Bacon.new "soggy"
