@@ -77,7 +77,21 @@ describe Tesla::Model do
     
   end
 
-  describe "ActiveModel" do
+  describe "validations" do
+    describe "of uniqueness" do
+      it "should check username" do
+        foo = User.create(:username => 'foo')
+        boo = User.new(:username => 'foo')
+        refute boo.valid?
+        boo.errors[:username].must_equal ["must be unique"]
+      end
+      it "should check email" do
+        foo = User.create(:email => 'foo@bar.com')
+        boo = User.new(:email => 'foo@bar.com')
+        refute boo.valid?
+        boo.errors[:email].must_equal ["must be unique"]
+      end
+    end
 
   end
 end
