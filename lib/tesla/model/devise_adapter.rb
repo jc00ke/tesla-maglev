@@ -23,6 +23,6 @@ module Devise
 end
 
 Tesla::Model::ClassMethods.class_eval do
- include Devise::Models
- include Devise::Orm::Tesla::Hook
+  include Devise::Models
+  include Devise::Orm::Tesla::Hook
 end

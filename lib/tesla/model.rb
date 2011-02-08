@@ -7,7 +7,6 @@ module Tesla
       receiver.extend         ClassMethods
       receiver.send :include, InstanceMethods
       receiver.send :include, ActiveModel::Validations
-      receiver.send :include, Tesla::Components
     end
 
     # methods that will be available to the included class, eg: User.foo
