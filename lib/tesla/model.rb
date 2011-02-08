@@ -3,13 +3,11 @@ require 'active_model'
 module Tesla
   module Model
 
-    extend ActiveSupport::Concern
-
-    # Flag any classes that include Model to also be persistable
-    included do
-      class_eval{ maglev_persistable }
-      extend ActiveModel::Naming
-      include ActiveModel::Validations
+    def self.included(receiver)
+      receiver.extend         ClassMethods
+      receiver.send :include, InstanceMethods
+      receiver.send :include, ActiveModel::Validations
+      receiver.send :include, Tesla::Components
     end
 
     # methods that will be available to the included class, eg: User.foo
@@ -23,7 +21,7 @@ module Tesla
                      raise "This is Maglev only" unless defined?(Maglev)
                      # In the future, it might be nice to use something
                      # other than an IdentitySet. Set? Bag?
-                     Maglev::PERSISTENT_ROOT[self] ||= IdentitySet.new
+                     Maglev::PERSISTENT_ROOT[self.to_s.intern] ||= IdentitySet.new
                    end
       end
 
@@ -43,11 +41,7 @@ module Tesla
         arg.is_a?(Module) ? !!included_modules.detect{ |m| m === arg } : store.include?(arg)
       end
 
-      # Change this to alias clear after Peter adds IdentitySet#clear
-      # https://gist.github.com/806923
-      def delete_all
-        all.each{ |o| delete(o) }
-      end
+      alias delete_all clear
 
       def new(options={})
         super(options).tap { |o| options.each { |k,v| o.send("#{k}=", v) if o.respond_to?("#{k}=") } }
