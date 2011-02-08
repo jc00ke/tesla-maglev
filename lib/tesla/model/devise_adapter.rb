@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), '..', 'model')
+require File.join(File.dirname(__FILE__), '..', '..', 'tesla')
 
 module Devise
   module Orm
@@ -14,7 +14,8 @@ module Devise
       module Schema
         include Devise::Schema
 
-        def apply_devise_schema(name, type, options={})
+        def apply_devise_schema(name, _, options={})
+          Rails.logger.warn "Your options (#{options.inspect}) for #{name} should be set directly on the #{self} model" unless options.empty?
           attr_accessor name
         end
       end
