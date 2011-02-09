@@ -3,6 +3,7 @@ module Tesla
 
     def self.included(receiver)
       receiver.extend         ClassMethods
+      receiver.extend         Tesla::Finders
       receiver.send :include, InstanceMethods
       receiver.send :include, ActiveModel::Validations
       receiver.send :include, Tesla::Validations
@@ -49,7 +50,9 @@ module Tesla
         new(options).tap { |o| o.save }
       end
 
-      def find(param)
+      def find(how_many, conditions={})
+        nil.pause
+        param = conditions[:id]
         detect{ |o| o.to_param == param }
       end
 

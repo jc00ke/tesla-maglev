@@ -11,5 +11,6 @@ require 'active_model/validations'
 # when testing this locally & when it's pulled
 # into the Rails app.
 HERE = File.expand_path(File.dirname(__FILE__))
+require "#{HERE}/tesla/finders"
 require "#{HERE}/tesla/validations"
 require "#{HERE}/model"
