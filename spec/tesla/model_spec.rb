@@ -25,6 +25,10 @@ describe Tesla::Model do
       assert Bacon.all.empty?
     end
 
+    it "should respond to .id" do
+      @soggy.must_respond_to :id
+    end
+
     it "should persist instances" do
       persist_all
       breakfast = Bacon.all

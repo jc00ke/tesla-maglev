@@ -50,12 +50,6 @@ module Tesla
         new(options).tap { |o| o.save }
       end
 
-      def find(how_many, conditions={})
-        nil.pause
-        param = conditions[:id]
-        detect{ |o| o.to_param == param }
-      end
-
       def method_missing(name, *args, &block)
         return detect { |e| e.send($1) == args.first } if name.to_s =~ /^find_by_(.+)$/
         super
@@ -100,6 +94,7 @@ module Tesla
       alias persisted? persistent?
       alias new_record? transient?
       alias save persist
+      alias id object_id
 
       def to_model
         self
